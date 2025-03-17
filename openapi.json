@@ -1,0 +1,1180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.3.0",
+    "title": "ケプラーAPI",
+    "description": ""
+  },
+  "tags": [
+    {
+      "name": "カメラ連携",
+      "description": ""
+    },
+    {
+      "name": "ケプラーGPT連携",
+      "description": ""
+    },
+    {
+      "name": "フォーグローブ連携",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/visit_customers": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://operation2020.jp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "結果"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "出庫",
+                      "description": "メッセージ（※出庫の場合のみ）"
+                    },
+                    "visit_id": {
+                      "type": "string",
+                      "example": "1234567890",
+                      "description": "来店ID（※入庫の場合のみ）"
+                    },
+                    "store_id": {
+                      "type": "string",
+                      "example": "netz_kaizen",
+                      "description": "販売店ID"
+                    },
+                    "shop_id": {
+                      "type": "string",
+                      "example": "01",
+                      "description": "店舗コード（ログインID）"
+                    },
+                    "license_area": {
+                      "type": "string",
+                      "example": "品川",
+                      "description": "地域名"
+                    },
+                    "license_type": {
+                      "type": "string",
+                      "example": "300",
+                      "description": "分類番号"
+                    },
+                    "license_kana": {
+                      "type": "string",
+                      "example": "ｱ",
+                      "description": "ひらがな（半角ｶﾅ）"
+                    },
+                    "license_no": {
+                      "type": "string",
+                      "example": "1111",
+                      "description": "一連指定番号"
+                    },
+                    "entrance": {
+                      "type": "string",
+                      "example": "0",
+                      "description": "入口番号"
+                    },
+                    "customer": {
+                      "type": "object",
+                      "description": "合致（or登録）した会員（車両）情報"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "store_id",
+                    "shop_id",
+                    "license_area",
+                    "license_type",
+                    "license_kana",
+                    "license_no",
+                    "entrance",
+                    "customer"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "店舗コードが正しくありません",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "認証コードが正しくありません",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "システムエラー",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "ナンバー送信",
+        "operationId": "ナンバー送信",
+        "description": "",
+        "tags": [
+          "カメラ連携"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store_id": {
+                    "type": "string",
+                    "description": "販売店ID"
+                  },
+                  "shop_id": {
+                    "type": "string",
+                    "description": "店舗コード（ログインID）"
+                  },
+                  "type": {
+                    "type": "integer",
+                    "description": "0:入庫、1:出庫、-1:不明"
+                  },
+                  "license_area": {
+                    "type": "string",
+                    "description": "地域名"
+                  },
+                  "license_type": {
+                    "type": "string",
+                    "description": "分類番号"
+                  },
+                  "license_kana": {
+                    "type": "string",
+                    "description": "ひらがな（全角かな）"
+                  },
+                  "license_no": {
+                    "type": "string",
+                    "description": "一連指定番号"
+                  },
+                  "entrance": {
+                    "type": "string",
+                    "description": "入口コード"
+                  }
+                },
+                "required": [
+                  "store_id",
+                  "shop_id",
+                  "shop_code",
+                  "type",
+                  "license_area",
+                  "license_type",
+                  "license_kana",
+                  "license_no",
+                  "entrance"
+                ]
+              },
+              "example": {
+                "store_id": "netz_kaizen",
+                "shop_id": "01",
+                "type": 0,
+                "license_area": "品川",
+                "license_type": "300",
+                "license_kana": "あ",
+                "license_no": "1111",
+                "entrance": "0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/visit_people": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://operation2020.jp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "結果"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "出庫",
+                      "description": "メッセージ（※出庫の場合のみ）"
+                    },
+                    "visit_id": {
+                      "type": "string",
+                      "example": "1234567890",
+                      "description": "来店ID（※入庫の場合のみ）"
+                    },
+                    "customer": {
+                      "type": "object",
+                      "description": "登録した会員（車両）情報"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "店舗コードが正しくありません",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "認証コードが正しくありません",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "結果"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "システムエラー",
+                      "description": "エラーメッセージ"
+                    }
+                  },
+                  "required": [
+                    "result",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "徒歩入出店情報送信",
+        "operationId": "徒歩入出店情報送信",
+        "description": "",
+        "tags": [
+          "カメラ連携"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store_id": {
+                    "type": "string",
+                    "description": "販売店ID"
+                  },
+                  "shop_id": {
+                    "type": "string",
+                    "description": "店舗コード（ログインID）"
+                  },
+                  "type": {
+                    "type": "integer",
+                    "description": "0:入店、1:出店"
+                  },
+                  "entrance": {
+                    "type": "string",
+                    "description": "入口コード"
+                  }
+                },
+                "required": [
+                  "store_id",
+                  "shop_id",
+                  "shop_code",
+                  "type",
+                  "entrance"
+                ]
+              },
+              "example": {
+                "store_id": "netz_kaizen",
+                "shop_id": "01",
+                "type": 0,
+                "entrance": "0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kepler_gpt": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 10,
+                      "description": "連携ID"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "店舗コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "認証コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "システムエラー"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "ケプラーGPT連携",
+        "operationId": "ケプラーGPT連携",
+        "description": "",
+        "tags": [
+          "ケプラーGPT連携"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store_id": {
+                    "type": "string",
+                    "description": "販売店ID"
+                  },
+                  "shop_code": {
+                    "type": "string",
+                    "description": "店舗コード（ログインID）"
+                  },
+                  "call_datetime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "通話日時（yyyy-mm-dd hh:mm:ss）"
+                  },
+                  "call_duration": {
+                    "type": "integer",
+                    "description": "通話時間（秒）"
+                  },
+                  "caller_phone_number": {
+                    "type": "string",
+                    "description": "発信電話番号"
+                  },
+                  "receiver_phone_number": {
+                    "type": "string",
+                    "description": "受信電話番号"
+                  },
+                  "call_content": {
+                    "type": "string",
+                    "description": "原文（通話の内容。テキストデータ）"
+                  },
+                  "call_summary": {
+                    "type": "string",
+                    "description": "要約（原文の要約）"
+                  }
+                },
+                "required": [
+                  "store_id",
+                  "shop_code",
+                  "call_datetime",
+                  "call_duration",
+                  "caller_phone_number",
+                  "receiver_phone_number",
+                  "call_content",
+                  "call_summary"
+                ]
+              },
+              "example": {
+                "store_id": "netz_kaizen",
+                "shop_code": "01",
+                "call_datetime": "2024-09-01 08:12:34",
+                "call_duration": 126,
+                "caller_phone_number": "042-000-0000",
+                "receiver_phone_number": "090-0000-0000",
+                "call_content": "お世話になっております。加藤です。石山さまのご都合の良い時に、試験にお付き合いいただきたいのですが、いかがでしょうか",
+                "call_summary": "■ 発信者：加藤\n■ 受信者：石山\n■ 内容：加藤が石山に試験に付き合ってほしいと連絡し、石山がそれを了承しました。"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/line_temporary_user": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://operation2020.jp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 11,
+                      "description": "LINE仮会員ID"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "店舗コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "認証コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "システムエラー"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "LINE会員仮登録情報連携",
+        "operationId": "LINE会員仮登録情報連携",
+        "description": "",
+        "tags": [
+          "フォーグローブ連携"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store_id": {
+                    "type": "string",
+                    "description": "販売店ID"
+                  },
+                  "shop_code": {
+                    "type": "string",
+                    "description": "店舗コード（ログインID）"
+                  },
+                  "register_date": {
+                    "type": "string",
+                    "description": "仮登録日時（yyyy-mm-dd hh:mm:ss）"
+                  },
+                  "line_user_id": {
+                    "type": "string",
+                    "description": "LINEユーザーID（U[0-9a-f]{32}）"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "description": "姓"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "description": "名"
+                  },
+                  "phone_number": {
+                    "type": "string",
+                    "description": "電話番号（ハイフン\"-\"なし）"
+                  },
+                  "license_area": {
+                    "type": "string",
+                    "description": "地域名"
+                  },
+                  "license_type": {
+                    "type": "string",
+                    "description": "分類番号"
+                  },
+                  "license_kana": {
+                    "type": "string",
+                    "description": "ひらがな（半角ｶﾅ）"
+                  },
+                  "license_no": {
+                    "type": "string",
+                    "description": "一連指定番号"
+                  }
+                },
+                "required": [
+                  "store_id",
+                  "shop_code",
+                  "register_date",
+                  "line_user_id",
+                  "last_name",
+                  "first_name",
+                  "phone_number",
+                  "license_area",
+                  "license_type",
+                  "license_kana",
+                  "license_no"
+                ]
+              },
+              "example": {
+                "store_id": "netz_kaizen",
+                "shop_code": "01",
+                "register_date": "2024-09-28 10:23:46",
+                "line_user_id": "U0123456789abcdefghijklmnopqrstu",
+                "last_name": "山田",
+                "first_name": "太郎",
+                "phone_number": 9012345678,
+                "license_area": "品川",
+                "license_type": "300",
+                "license_kana": "ｱ",
+                "license_no": "0001"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/fourglobe/inspection_reserve": {
+      "get": {
+        "servers": [
+          {
+            "url": "https://yoyaku.operation2020.jp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json; charset=utf8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "selectable_date_times": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "予約可能日時"
+                    },
+                    "image_url": {
+                      "type": "string",
+                      "description": "予約アプリ表示画像"
+                    }
+                  },
+                  "required": [
+                    "selectable_date_times",
+                    "image_url"
+                  ]
+                },
+                "example": {
+                  "selectable_date_times": {
+                    "2024-12-01": [
+                      "10:00",
+                      "10:30",
+                      "11:00"
+                    ],
+                    "2024-12-02": [
+                      "11:00",
+                      "11:30"
+                    ],
+                    "2024-12-03": [
+                      "10:00",
+                      "10:30",
+                      "11:00",
+                      "11:30",
+                      "12:00",
+                      "12:30"
+                    ]
+                  },
+                  "image_url": "https://s3.ap-northeast-1.amazonaws.com/public.message.operation2020.jp/template_image/prod/sample.png"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "予約コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "認証コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "システムエラー"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "予約アプリ連携",
+        "operationId": "予約アプリ連携",
+        "description": "",
+        "tags": [
+          "フォーグローブ連携"
+        ],
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "query",
+            "description": "販売店ID",
+            "required": true,
+            "example": "netz_kaizen",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "shop_code",
+            "in": "query",
+            "description": "店舗コード（ログインID）",
+            "required": true,
+            "example": "01",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inspection_reserve_code",
+            "in": "query",
+            "description": "予約コード（※URLエンコードして下さい）",
+            "required": true,
+            "example": "ABCabcABCabcABCabcABCabcABCabcABCabcABCabc%3D",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ]
+      },
+      "post": {
+        "servers": [
+          {
+            "url": "https://yoyaku.operation2020.jp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 11,
+                      "description": "車検・定期点検予約ID"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "店舗コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "認証コードが正しくありません"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "システムエラー"
+                      },
+                      "description": "エラーメッセージ配列"
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "車検・定期点検予約情報連携",
+        "operationId": "車検・定期点検予約情報連携",
+        "description": "",
+        "tags": [
+          "フォーグローブ連携"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-AUTH",
+            "in": "header",
+            "description": "認証コード",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abcdefghijklmnopqrstuvwxyz01234"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store_id": {
+                    "type": "string",
+                    "description": "販売店ID"
+                  },
+                  "shop_code": {
+                    "type": "string",
+                    "description": "店舗コード（ログインID）"
+                  },
+                  "inspection_reserve_code": {
+                    "type": "string",
+                    "description": "予約コード"
+                  },
+                  "reserve_date": {
+                    "type": "string",
+                    "description": "予約日（yyyy-mm-dd）"
+                  },
+                  "reserve_time_from": {
+                    "type": "string",
+                    "description": "予約開始時刻（hh:ii）"
+                  },
+                  "reserve_time_to": {
+                    "type": "string",
+                    "description": "予約終了時刻（hh:ii）"
+                  }
+                },
+                "required": [
+                  "store_id",
+                  "shop_code",
+                  "inspection_reserve_code",
+                  "reserve_date",
+                  "reserve_time_from",
+                  "reserve_time_to"
+                ]
+              },
+              "example": {
+                "store_id": "netz_kaizen",
+                "shop_code": "01",
+                "inspection_reserve_code": "ABCabcABCabcABCabcABCabcABCabcABCabcABCabc=",
+                "reserve_date": "2024-09-01",
+                "reserve_time_from": "10:00",
+                "reserve_time_to": "11:00"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

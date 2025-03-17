@@ -1,0 +1,17 @@
+# Network and async libraries
+aiohttp==3.8.5
+asyncio==3.4.3
+
+# Database
+mysql-connector-python==8.0.33
+
+# Logging and utilities
+python-dotenv==1.0.0
+colorlog==6.7.0
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.21.1
+
+# System integration
+psutil==5.9.5 
